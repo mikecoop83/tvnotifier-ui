@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { Plus, PlusCircle, TelevisionSimple, Trash } from 'phosphor-svelte';
+	import { Plus, TelevisionSimple, Trash } from 'phosphor-svelte';
 	import type { PageData } from './$types';
 	import moment from 'moment';
 	import { enhance } from '$app/forms';
 
 	export let data: PageData;
 
-	$: ({ shows, searchResults } = data);
+	$: ({ shows, searchResults, deleting } = data);
 
 	function relativeDate(date?: string) {
 		if (!date) {
@@ -72,15 +72,24 @@
 			{#each shows as show}
 				<tr>
 					<td><img class="w-12" src={show.image} alt={show.name} /></td>
-					<td>{show.name}</td>
-					<td>{relativeDate(show.nextEpisodeTime)}</td>
 					<td>
-						<form method="post" action="?/deleteShow" use:enhance>
-							<input type="hidden" name="showId" value={show.id} />
-							<button class="btn variant-filled-secondary btn-sm">
-								<Trash size="20" />
-							</button>
-						</form>
+						<div class="w-32 text-clip overflow-hidden">
+							<a href="/?delete={show.id}">
+								{show.name}
+							</a>
+						</div>
+					</td>
+					<td>
+						{#if deleting && deleting === show.id.toString()}
+							<form method="post" action="?/deleteShow" use:enhance>
+								<input type="hidden" name="showId" value={show.id} />
+								<button class="btn variant-filled-secondary btn-sm">
+									<Trash size="20" />
+								</button>
+							</form>
+						{:else}
+							{relativeDate(show.nextEpisodeTime)}
+						{/if}
 					</td>
 				</tr>
 			{/each}

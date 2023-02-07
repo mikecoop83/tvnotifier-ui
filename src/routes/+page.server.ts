@@ -47,7 +47,8 @@ export const load = (async ({ url }) => {
 
   return {
     shows,
-    searchResults
+    searchResults,
+    deleting: url.searchParams.get('delete')
   };
 }) satisfies PageServerLoad;
 
