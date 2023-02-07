@@ -8,8 +8,7 @@ datasource db {
 }
 
 model Shows {
-  id   Int    @id(map: "pk")
-  name String @db.String(256)
+  id Int @id(map: "pk")
 
   @@map("shows")
 }

@@ -1,8 +1,18 @@
 import { prisma } from '$lib/server/prisma';
+import type { APIShow } from '$lib/types';
 import type { Shows } from '@prisma/client';
-import type { PageServerLoad } from './$types';
+import { fail, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
 
-export const load = (async ({ params }) => {
+interface ShowFromTVMaze {
+  id: number;
+  name: string;
+  image: {
+    medium: string;
+  };
+}
+
+export const load = (async ({ url }) => {
   const dbShows = await prisma.shows.findMany();
   const shows = await Promise.all(dbShows.map(getShow));
   shows.sort((a, b) => {
@@ -20,17 +30,26 @@ export const load = (async ({ params }) => {
     }
     return 0;
   });
+
+  let searchResults: APIShow[] = [];
+  if (url.searchParams.get('query')) {
+    const data = await fetch(
+      `https://api.tvmaze.com/search/shows?q=${url.searchParams.get('query')}`
+    );
+    const body = await data.json();
+    const results: APIShow[] = body.map(({ show }: { show: ShowFromTVMaze }) => ({
+      id: show.id,
+      name: show.name,
+      image: show.image?.medium
+    }));
+    searchResults = results.slice(0, 10);
+  }
+
   return {
-    shows
+    shows,
+    searchResults
   };
 }) satisfies PageServerLoad;
-
-interface APIShow {
-  id: number;
-  name: string;
-  image: string;
-  nextEpisodeTime: string;
-}
 
 async function getShow(show: Shows): Promise<APIShow> {
   const data = await fetch(`https://api.tvmaze.com/shows/${show.id}?embed=nextepisode`, {
@@ -48,3 +67,37 @@ async function getShow(show: Shows): Promise<APIShow> {
     nextEpisodeTime: body._embedded?.nextepisode?.airstamp
   };
 }
+
+export const actions = {
+  addShow: async ({ request }) => {
+    const formData = await request.formData();
+    const showId = formData.get('showId');
+    if (typeof showId !== 'string') {
+      return fail(400, { message: 'Invalid showId' });
+    }
+    const id = parseInt(showId);
+    if (isNaN(id)) {
+      return fail(400, { message: 'Invalid showId' });
+    }
+
+    await prisma.shows.create({ data: { id } });
+
+    throw redirect(301, '/');
+  },
+
+  deleteShow: async ({ request }) => {
+    const formData = await request.formData();
+    const showId = formData.get('showId');
+    if (typeof showId !== 'string') {
+      return fail(400, { message: 'Invalid showId' });
+    }
+    const id = parseInt(showId);
+    if (isNaN(id)) {
+      return fail(400, { message: 'Invalid showId' });
+    }
+
+    await prisma.shows.delete({ where: { id } });
+
+    throw redirect(301, '/');
+  }
+} satisfies Actions;
