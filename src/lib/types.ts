@@ -4,3 +4,8 @@ export interface APIShow {
   image?: string;
   nextEpisodeTime?: string;
 }
+
+export interface User {
+  userId: string;
+  pictureURL: string;
+}
