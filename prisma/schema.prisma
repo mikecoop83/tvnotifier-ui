@@ -12,3 +12,9 @@ model Shows {
 
   @@map("shows")
 }
+
+model User {
+  id String @id(map: "pk")
+
+  @@map("users")
+}
