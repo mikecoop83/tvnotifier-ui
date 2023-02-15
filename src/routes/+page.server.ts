@@ -83,7 +83,7 @@ export const actions = {
 
 		await prisma.shows.create({ data: { id } });
 
-		throw redirect(301, '/');
+		throw redirect(302, '/');
 	},
 
 	deleteShow: async ({ request }) => {
@@ -99,6 +99,6 @@ export const actions = {
 
 		await prisma.shows.delete({ where: { id } });
 
-		throw redirect(301, '/');
+		throw redirect(302, '/');
 	}
 } satisfies Actions;

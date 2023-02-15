@@ -2,7 +2,7 @@ import { getUserFromToken } from '$lib/server/auth';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle = (async ({ event, resolve }) => {
-	if (event.url.pathname.startsWith('/login') || event.url.pathname.startsWith('/callback/auth')) {
+	if (event.url.pathname.startsWith('/login') || event.url.pathname.startsWith('/callback/google')) {
 		const response = await resolve(event);
 		return response;
 	}

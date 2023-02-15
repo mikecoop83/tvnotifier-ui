@@ -19,7 +19,7 @@ export const GET = (async ({ url, cookies }) => {
 
     const token = generateToken(profileData.id, profileData.picture);
     cookies.set('auth', token, { path: '/' });
-    throw redirect(303, '/');
+    throw redirect(302, '/');
   }
   throw error(400, 'how did you even get her bro');
 }) satisfies RequestHandler;
