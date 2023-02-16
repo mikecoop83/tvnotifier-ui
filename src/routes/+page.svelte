@@ -17,7 +17,7 @@
 </script>
 
 <div class="flex-col gap-4 container h-full mx-auto flex justify-center items-center p-4">
-	<form class="flex flex-row gap-2" method="get" use:enhance>
+	<form action="/" class="flex flex-row gap-2" method="GET" use:enhance>
 		<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
 			<a href="/" class="btn variant-filled-secondary btn-base">Clear</a>
 			<input type="text" name="query" placeholder="Name..." required />
