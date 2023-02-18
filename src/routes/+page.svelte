@@ -43,7 +43,13 @@
 								<TelevisionSimple size="48" />
 							{/if}
 						</td>
-						<td>{show.name}</td>
+						<td>
+							<div class="w-32">
+								<a href="https://www.tvmaze.com/shows/{show.id}">
+									{show.name}
+								</a><br />
+							</div>
+						</td>
 						<td>
 							<form method="post" action="?/addShow" use:enhance>
 								<input type="hidden" name="showId" value={show.id} />
