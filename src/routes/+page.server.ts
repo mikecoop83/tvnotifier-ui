@@ -47,7 +47,7 @@ export const load = (async ({ url }) => {
 
 	return {
 		shows,
-		searchResults,
+		searchResults
 	};
 }) satisfies PageServerLoad;
 

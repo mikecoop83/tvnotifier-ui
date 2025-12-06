@@ -29,7 +29,7 @@
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th />
+					<th></th>
 					<th>Name</th>
 					<th>Add</th>
 				</tr>
@@ -68,10 +68,10 @@
 		<thead>
 			<tr>
 				<!-- <th>ID</th> -->
-				<th />
+				<th></th>
 				<th>Name</th>
 				<th>Delete</th>
-				<th />
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>

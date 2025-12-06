@@ -1,26 +1,23 @@
 <script lang="ts">
-	import '@skeletonlabs/skeleton/themes/theme-crimson.css';
-	import '@skeletonlabs/skeleton/styles/all.css';
-	import '../app.postcss';
+	import '../app.css';
 	import type { LayoutData } from './$types';
-	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 
 	export let data: LayoutData;
 </script>
 
-<!-- App Shell -->
-<AppShell>
-	<svelte:fragment slot="header">
-		<!-- App Bar -->
-		<AppBar>
-			<svelte:fragment slot="lead">
+<div class="min-h-screen bg-background text-foreground">
+	<AppBar class="border-b">
+		<AppBar.Toolbar class="container mx-auto flex items-center justify-between p-4">
+			<AppBar.Lead>
 				<strong class="text-xl uppercase">TV Notifier</strong>
-			</svelte:fragment>
-			<svelte:fragment slot="trail">
+			</AppBar.Lead>
+			<AppBar.Trail>
 				<img class="w-12 h-12 rounded-full" src={data?.user?.pictureURL ?? ''} alt="user" />
-			</svelte:fragment>
-		</AppBar>
-	</svelte:fragment>
-	<!-- Page Route Content -->
-	<slot />
-</AppShell>
+			</AppBar.Trail>
+		</AppBar.Toolbar>
+	</AppBar>
+	<main class="container mx-auto p-4">
+		<slot />
+	</main>
+</div>
