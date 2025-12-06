@@ -2,10 +2,11 @@
 <script lang="ts">
   import '../app.postcss';
   import type { LayoutData } from './$types';
-
+  import { AppShell, AppBar } from '@skeletonlabs/skeleton';
   export let data: LayoutData;
 </script>
 
+<slot />
 <div class="min-h-screen flex flex-col bg-slate-950 text-slate-50">
   <!-- Header -->
   <header class="w-full border-b border-slate-800 bg-slate-900/80 backdrop-blur">
