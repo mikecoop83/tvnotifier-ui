@@ -1,4 +1,5 @@
 import { generateToken, oauth2client } from '$lib/server/auth';
+import { prisma } from '$lib/server/prisma';
 import { error, redirect } from '@sveltejs/kit';
 import type { oauth2_v2 } from 'googleapis';
 import type { RequestHandler } from './$types';
@@ -15,6 +16,13 @@ export const GET = (async ({ url, cookies }) => {
 
 		if (!profileData.id) {
 			throw error(400, 'no profile data');
+		}
+
+		const dbUser = await prisma.user.findUnique({
+			where: { id: profileData.id }
+		});
+		if (!dbUser) {
+			throw redirect(302, '/denied');
 		}
 
 		const token = generateToken(profileData.id, profileData.picture);

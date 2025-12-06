@@ -17,7 +17,8 @@ export const oauth2client = new google.auth.OAuth2(
 );
 
 export const authUrl = oauth2client.generateAuthUrl({
-	scope: ['openid', 'https://www.googleapis.com/auth/userinfo.profile']
+	scope: ['openid', 'https://www.googleapis.com/auth/userinfo.profile'],
+	prompt: 'select_account'
 });
 
 // create and store authTokens

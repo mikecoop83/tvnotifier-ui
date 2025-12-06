@@ -5,7 +5,9 @@ import { redirect, type Handle } from '@sveltejs/kit';
 export const handle = (async ({ event, resolve }) => {
 	if (
 		event.url.pathname.startsWith('/login') ||
-		event.url.pathname.startsWith('/callback/google')
+		event.url.pathname.startsWith('/callback/google') ||
+		event.url.pathname.startsWith('/denied') ||
+		event.url.pathname.startsWith('/logout')
 	) {
 		const response = await resolve(event);
 		return response;
@@ -18,7 +20,7 @@ export const handle = (async ({ event, resolve }) => {
 
 	const user = getUserFromToken(token);
 	if (!user) {
-		throw redirect(302, '/login');
+		throw redirect(302, '/denied');
 	}
 	console.log(user);
 
@@ -29,7 +31,7 @@ export const handle = (async ({ event, resolve }) => {
 		}
 	});
 	if (!dbUser) {
-		throw redirect(302, '/login');
+		throw redirect(302, '/denied');
 	}
 
 	const response = await resolve(event);

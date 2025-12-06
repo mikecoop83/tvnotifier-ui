@@ -3,10 +3,14 @@
 	import type { PageData } from './$types';
 	import moment from 'moment';
 	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 
 	$: ({ shows, searchResults } = data);
+	let searchTerm = '';
+	$: searchTerm = $page.url.searchParams.get('query') ?? '';
 	let pendingDelete: { id: number; name: string } | null = null;
 
 	function relativeDate(date?: string) {
@@ -15,13 +19,26 @@
 		}
 		return `next episode ${moment(date).fromNow()}`;
 	}
+
+	const handleAddShow = ({ update }: { update: () => Promise<void> }) =>
+		async ({ result }: { result: { type: string; location?: string } }) => {
+			if (result.type === 'redirect' && result.location) {
+				searchTerm = '';
+				await goto(result.location);
+				return;
+			}
+			if (result.type === 'success') {
+				searchTerm = '';
+				await update();
+			}
+		};
 </script>
 
 <div class="flex-col gap-4 container h-full mx-auto flex justify-center items-center p-4">
 	<form action="/" class="flex flex-row gap-2" method="get">
 		<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
 			<a href="/" class="btn variant-filled-secondary btn-base">Clear</a>
-			<input class="pl-3" type="text" name="query" placeholder="Name..." required />
+			<input class="pl-3" type="text" name="query" placeholder="Name..." bind:value={searchTerm} required />
 			<button class="btn variant-filled-primary btn-base">Search</button>
 		</div>
 	</form>
@@ -39,11 +56,13 @@
 				{#each searchResults as show}
 					<tr>
 						<td>
-							{#if show.image}
-								<img class="w-12" src={show.image} alt={show.name} />
-							{:else}
-								<TelevisionSimple size="48" />
-							{/if}
+							<a href="https://www.tvmaze.com/shows/{show.id}" aria-label={show.name}>
+								{#if show.image}
+									<img class="w-12" src={show.image} alt={show.name} />
+								{:else}
+									<TelevisionSimple size="48" />
+								{/if}
+							</a>
 						</td>
 						<td>
 							<div class="min-w-[12rem] space-y-1">
@@ -56,7 +75,7 @@
 							</div>
 						</td>
 						<td>
-							<form method="post" action="?/addShow" use:enhance>
+							<form method="post" action="?/addShow" use:enhance={handleAddShow}>
 								<input type="hidden" name="showId" value={show.id} />
 								<button class="btn variant-filled-secondary btn-sm">
 									<Plus size="20" />
@@ -82,7 +101,9 @@
 			{#each shows as show}
 				<tr>
 					<td>
-						<img class="w-12" src={show.image} alt={show.name} />
+						<a href="https://www.tvmaze.com/shows/{show.id}" aria-label={show.name}>
+							<img class="w-12" src={show.image} alt={show.name} />
+						</a>
 					</td>
 					<td>
 						<div class="min-w-[12rem] space-y-1">
