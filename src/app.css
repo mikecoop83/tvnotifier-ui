@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+@import '../node_modules/@skeletonlabs/skeleton/src/themes/crimson.css';
+@import '../node_modules/@skeletonlabs/skeleton/src/index.css';
+
+html,
+body {
+	@apply h-full overflow-hidden;
+}
+
+a {
+	@apply text-sky-300 hover:text-sky-200 underline-offset-2 hover:underline;
+}

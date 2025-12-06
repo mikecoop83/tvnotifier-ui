@@ -20,7 +20,7 @@
 	<form action="/" class="flex flex-row gap-2" method="get">
 		<div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
 			<a href="/" class="btn variant-filled-secondary btn-base">Clear</a>
-			<input type="text" name="query" placeholder="Name..." required />
+			<input class="pl-3" type="text" name="query" placeholder="Name..." required />
 			<button class="btn variant-filled-primary btn-base">Search</button>
 		</div>
 	</form>
@@ -45,10 +45,13 @@
 							{/if}
 						</td>
 						<td>
-							<div class="w-32">
-								<a href="https://www.tvmaze.com/shows/{show.id}">
+							<div class="min-w-[12rem] space-y-1">
+								<a class="font-semibold text-sky-300" href="https://www.tvmaze.com/shows/{show.id}">
 									{show.name}
-								</a><br />
+								</a>
+								<span class="block text-sm text-slate-300 whitespace-nowrap">
+									{relativeDate(show.nextEpisodeTime)}
+								</span>
 							</div>
 						</td>
 						<td>
@@ -81,11 +84,13 @@
 						<img class="w-12" src={show.image} alt={show.name} />
 					</td>
 					<td>
-						<div class="w-32">
-							<a href="https://www.tvmaze.com/shows/{show.id}">
+						<div class="min-w-[12rem] space-y-1">
+							<a class="font-semibold text-sky-300" href="https://www.tvmaze.com/shows/{show.id}">
 								{show.name}
-							</a><br />
-							{relativeDate(show.nextEpisodeTime)}
+							</a>
+							<span class="block text-sm text-slate-300 whitespace-nowrap">
+								{relativeDate(show.nextEpisodeTime)}
+							</span>
 						</div>
 					</td>
 					<td>
