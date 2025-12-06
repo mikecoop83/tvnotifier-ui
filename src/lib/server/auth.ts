@@ -9,7 +9,11 @@ const privateKey = env.JWT_KEY;
 export const oauth2client = new google.auth.OAuth2(
   env.GOOGLE_CLIENT_ID,
   env.GOOGLE_CLIENT_SECRET,
-  new URL('/callback/google', env.SITE_URL).toString()
+  //new URL('/callback/google', env.SITE_URL).toString()
+  new URL(
+    '/callback/google',
+    env.SITE_URL ?? 'http://localhost:5173'
+  ).toString()
 );
 
 export const authUrl = oauth2client.generateAuthUrl({
