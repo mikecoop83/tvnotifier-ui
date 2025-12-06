@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@prisma/client':
-        specifier: ^4.10.1
+        specifier: 4.16.2
         version: 4.16.2(prisma@4.16.2)
       '@types/lodash':
         specifier: ^4.14.191
@@ -88,7 +88,7 @@ importers:
         specifier: ^3.4.0
         version: 3.4.0(prettier@3.7.4)(svelte@5.45.6)
       prisma:
-        specifier: ^4.10.1
+        specifier: 4.16.2
         version: 4.16.2
       svelte:
         specifier: ^5.45.6

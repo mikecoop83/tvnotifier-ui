@@ -30,7 +30,7 @@
 		"postcss": "^8.4.21",
 		"prettier": "^3.7.4",
 		"prettier-plugin-svelte": "^3.4.0",
-		"prisma": "^4.10.1",
+		"prisma": "4.16.2",
 		"svelte": "^5.45.6",
 		"svelte-check": "^4.3.4",
 		"svelte-preprocess": "^6.0.3",
@@ -42,7 +42,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@prisma/client": "^4.10.1",
+		"@prisma/client": "4.16.2",
 		"@types/lodash": "^4.14.191",
 		"base64url": "^3.0.1",
 		"googleapis": "^111.0.0",
