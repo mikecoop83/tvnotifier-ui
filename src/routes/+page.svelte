@@ -7,6 +7,7 @@
 	export let data: PageData;
 
 	$: ({ shows, searchResults } = data);
+	let pendingDelete: { id: number; name: string } | null = null;
 
 	function relativeDate(date?: string) {
 		if (!date) {
@@ -96,7 +97,13 @@
 					<td>
 						<form method="post" action="?/deleteShow" use:enhance>
 							<input type="hidden" name="showId" value={show.id} />
-							<button class="btn variant-filled-secondary btn-sm">
+							<button
+								class="btn variant-filled-secondary btn-sm"
+								type="button"
+								on:click={() => {
+									pendingDelete = { id: show.id, name: show.name };
+								}}
+							>
 								<Trash size="20" />
 							</button>
 						</form>
@@ -105,4 +112,39 @@
 			{/each}
 		</tbody>
 	</table>
+
+	{#if pendingDelete}
+		<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+			<div class="w-[26rem] rounded-xl border border-slate-800 bg-slate-900 shadow-2xl shadow-slate-950/50 p-6 space-y-4">
+				<header class="space-y-1">
+					<h2 class="text-lg font-semibold text-slate-50">Remove show</h2>
+					<p class="text-sm text-slate-300">Are you sure you want to remove “{pendingDelete.name}” from your list?</p>
+				</header>
+				<div class="flex justify-end gap-3">
+					<button
+						class="btn variant-filled-secondary"
+						type="button"
+						on:click={() => {
+							pendingDelete = null;
+						}}
+					>
+						Cancel
+					</button>
+					<form
+						method="post"
+						action="?/deleteShow"
+						use:enhance
+						on:submit={() => {
+							pendingDelete = null;
+						}}
+					>
+						<input type="hidden" name="showId" value={pendingDelete.id} />
+						<button class="btn variant-filled-primary" type="submit">
+							Delete
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>
