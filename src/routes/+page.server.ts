@@ -12,6 +12,37 @@ interface ShowFromTVMaze {
 	};
 }
 
+const USER_AGENT = 'tv-notifier/1.0 (+https://tv.mikecoop.dev)';
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function fetchWithBackoff(
+	url: string,
+	init: RequestInit = {},
+	maxRetries = 4
+) {
+	let attempt = 0;
+	const headers = new Headers(init.headers ?? {});
+	if (!headers.has('User-Agent')) {
+		headers.set('User-Agent', USER_AGENT);
+	}
+	headers.set('Accept', 'application/json');
+
+	while (true) {
+		const response = await fetch(url, { ...init, headers });
+		if (response.status !== 429 || attempt >= maxRetries) {
+			return response;
+		}
+		const retryAfterHeader = response.headers.get('retry-after');
+		const retryAfterSeconds = retryAfterHeader ? Number.parseInt(retryAfterHeader, 10) : null;
+		const delay = Number.isFinite(retryAfterSeconds)
+			? retryAfterSeconds * 1000
+			: 500 * 2 ** attempt;
+		await sleep(delay);
+		attempt += 1;
+	}
+}
+
 export const load = (async ({ url }) => {
 	const dbShows = await prisma.shows.findMany();
 	const shows = await Promise.all(dbShows.map(getShow));
@@ -33,7 +64,7 @@ export const load = (async ({ url }) => {
 
 	let searchResults: APIShow[] = [];
 	if (url.searchParams.get('query')) {
-		const data = await fetch(
+		const data = await fetchWithBackoff(
 			`https://api.tvmaze.com/search/shows?q=${url.searchParams.get('query')}`
 		);
 		const body = await data.json();
@@ -52,13 +83,15 @@ export const load = (async ({ url }) => {
 }) satisfies PageServerLoad;
 
 async function getShow(show: Shows): Promise<APIShow> {
-	const data = await fetch(`https://api.tvmaze.com/shows/${show.id}?embed=nextepisode`, {
-		method: 'GET',
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json'
+	const data = await fetchWithBackoff(
+		`https://api.tvmaze.com/shows/${show.id}?embed=nextepisode`,
+		{
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
 		}
-	});
+	);
 	const body = await data.json();
 	return {
 		id: show.id,
