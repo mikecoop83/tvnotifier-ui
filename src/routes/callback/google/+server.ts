@@ -1,4 +1,4 @@
-import { generateToken, oauth2client } from '$lib/server/auth';
+import { createOAuthClient, generateToken } from '$lib/server/auth';
 import { prisma } from '$lib/server/prisma';
 import { error, redirect } from '@sveltejs/kit';
 import type { oauth2_v2 } from 'googleapis';
@@ -7,6 +7,7 @@ import type { RequestHandler } from './$types';
 export const GET = (async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
 	if (code) {
+		const oauth2client = createOAuthClient(url.origin);
 		const { tokens } = await oauth2client.getToken(code);
 		oauth2client.setCredentials(tokens);
 		const { data: profileData } = await oauth2client.request<oauth2_v2.Schema$Userinfo>({

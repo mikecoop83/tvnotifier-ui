@@ -10,16 +10,21 @@ if (!privateKey) {
 }
 const signingKey: jwt.Secret = privateKey;
 
-export const oauth2client = new google.auth.OAuth2(
-	env.GOOGLE_CLIENT_ID,
-	env.GOOGLE_CLIENT_SECRET,
-	new URL('/callback/google', env.SITE_URL).toString()
-);
+export function createOAuthClient(origin: string) {
+	return new google.auth.OAuth2(
+		env.GOOGLE_CLIENT_ID,
+		env.GOOGLE_CLIENT_SECRET,
+		new URL('/callback/google', origin).toString()
+	);
+}
 
-export const authUrl = oauth2client.generateAuthUrl({
-	scope: ['openid', 'https://www.googleapis.com/auth/userinfo.profile'],
-	prompt: 'select_account'
-});
+export function buildAuthUrl(origin: string) {
+	const client = createOAuthClient(origin);
+	return client.generateAuthUrl({
+		scope: ['openid', 'https://www.googleapis.com/auth/userinfo.profile'],
+		prompt: 'select_account'
+	});
+}
 
 // create and store authTokens
 // seperate tokens for each client vs one token served to each?
