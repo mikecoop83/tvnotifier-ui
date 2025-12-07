@@ -8,11 +8,28 @@ export const GET = (async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
 	if (code) {
 		const oauth2client = await createOAuthClient(url.origin);
-		const { tokens } = await oauth2client.getToken(code);
+		console.log('[http] request', {
+			url: 'https://oauth2.googleapis.com/token',
+			method: 'POST',
+			scope: 'google-oauth-token'
+		});
+		const { tokens, res: tokenResponse } = await oauth2client.getToken(code);
+		console.log('[http] response', {
+			url: 'https://oauth2.googleapis.com/token',
+			status: tokenResponse?.status,
+			method: 'POST',
+			scope: 'google-oauth-token'
+		});
 		oauth2client.setCredentials(tokens);
-		const { data: profileData } = await oauth2client.request<oauth2_v2.Schema$Userinfo>({
+		const { data: profileData, status } = await oauth2client.request<oauth2_v2.Schema$Userinfo>({
 			url: 'https://www.googleapis.com/oauth2/v1/userinfo',
 			method: 'GET'
+		});
+		console.log('[http] response', {
+			url: 'https://www.googleapis.com/oauth2/v1/userinfo',
+			status,
+			method: 'GET',
+			scope: 'google-userinfo'
 		});
 
 		if (!profileData.id) {

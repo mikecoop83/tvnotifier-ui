@@ -1,3 +1,4 @@
+import { logFetch } from '$lib/server/http';
 import { prisma } from '$lib/server/prisma';
 import type { APIShow } from '$lib/types';
 import type { Shows } from '@prisma/client';
@@ -29,7 +30,7 @@ async function fetchWithBackoff(
 	headers.set('Accept', 'application/json');
 
 	while (true) {
-		const response = await fetch(url, { ...init, headers });
+		const response = await logFetch(url, { ...init, headers });
 		if (response.status !== 429 || attempt >= maxRetries) {
 			return response;
 		}
