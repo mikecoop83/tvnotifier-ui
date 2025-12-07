@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { Plus, TelevisionSimple, Trash } from 'phosphor-svelte';
 	import type { PageData } from './$types';
-	import moment from 'moment';
+	import dayjs from 'dayjs';
+	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 
 	export let data: PageData;
+
+	dayjs.extend(relativeTime);
 
 	$: ({ shows, searchResults } = data);
 	let searchTerm = '';
@@ -17,7 +20,7 @@
 		if (!date) {
 			return '';
 		}
-		return `next episode ${moment(date).fromNow()}`;
+		return `next episode ${dayjs(date).fromNow()}`;
 	}
 
 	const handleAddShow = ({ update }: { update: () => Promise<void> }) =>

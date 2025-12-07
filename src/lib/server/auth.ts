@@ -1,8 +1,8 @@
-import { google } from 'googleapis';
 import jwt from 'jsonwebtoken';
 import base64url from 'base64url';
 import { env } from '$env/dynamic/private';
 import type { User } from '$lib/types';
+import type { OAuth2Client } from 'google-auth-library';
 
 const privateKey = env.JWT_KEY;
 if (!privateKey) {
@@ -10,7 +10,17 @@ if (!privateKey) {
 }
 const signingKey: jwt.Secret = privateKey;
 
-export function createOAuthClient(origin: string) {
+let googleModulePromise: Promise<typeof import('googleapis')> | null = null;
+
+async function loadGoogle() {
+	if (!googleModulePromise) {
+		googleModulePromise = import('googleapis');
+	}
+	return googleModulePromise;
+}
+
+export async function createOAuthClient(origin: string): Promise<OAuth2Client> {
+	const { google } = await loadGoogle();
 	return new google.auth.OAuth2(
 		env.GOOGLE_CLIENT_ID,
 		env.GOOGLE_CLIENT_SECRET,
@@ -18,8 +28,8 @@ export function createOAuthClient(origin: string) {
 	);
 }
 
-export function buildAuthUrl(origin: string) {
-	const client = createOAuthClient(origin);
+export async function buildAuthUrl(origin: string) {
+	const client = await createOAuthClient(origin);
 	return client.generateAuthUrl({
 		scope: ['openid', 'https://www.googleapis.com/auth/userinfo.profile'],
 		prompt: 'select_account'
