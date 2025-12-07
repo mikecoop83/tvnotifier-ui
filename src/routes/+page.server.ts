@@ -34,10 +34,11 @@ async function fetchWithBackoff(
 			return response;
 		}
 		const retryAfterHeader = response.headers.get('retry-after');
-		const retryAfterSeconds = retryAfterHeader ? Number.parseInt(retryAfterHeader, 10) : null;
-		const delay = Number.isFinite(retryAfterSeconds)
-			? retryAfterSeconds * 1000
-			: 500 * 2 ** attempt;
+		const retryAfterSeconds = retryAfterHeader ? Number.parseInt(retryAfterHeader, 10) : undefined;
+		const delay =
+			typeof retryAfterSeconds === 'number' && Number.isFinite(retryAfterSeconds)
+				? retryAfterSeconds * 1000
+				: 500 * 2 ** attempt;
 		await sleep(delay);
 		attempt += 1;
 	}

@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 import base64url from 'base64url';
 import { env } from '$env/dynamic/private';
 import type { User } from '$lib/types';
-import type { OAuth2Client } from 'google-auth-library';
 
 const privateKey = env.JWT_KEY;
 if (!privateKey) {
@@ -19,7 +18,7 @@ async function loadGoogle() {
 	return googleModulePromise;
 }
 
-export async function createOAuthClient(origin: string): Promise<OAuth2Client> {
+export async function createOAuthClient(origin: string) {
 	const { google } = await loadGoogle();
 	return new google.auth.OAuth2(
 		env.GOOGLE_CLIENT_ID,
