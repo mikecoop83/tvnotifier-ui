@@ -13,6 +13,12 @@ interface ShowFromTVMaze {
 	};
 }
 
+interface NextEpisode {
+	name?: string;
+	summary?: string;
+	airstamp?: string;
+}
+
 const USER_AGENT = 'tv-notifier/1.0 (+https://tv.mikecoop.dev)';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -99,7 +105,15 @@ async function getShow(show: Shows): Promise<APIShow> {
 		id: show.id,
 		name: body.name,
 		image: body.image.medium,
-		nextEpisodeTime: body._embedded?.nextepisode?.airstamp
+	nextEpisodeTime: body._embedded?.nextepisode?.airstamp,
+	nextEpisodeName: (body._embedded?.nextepisode as NextEpisode | undefined)?.name,
+	nextEpisodeSummary: (body._embedded?.nextepisode as NextEpisode | undefined)?.summary,
+	summary: body.summary,
+		status: body.status,
+		network: body.network?.name ?? body.webChannel?.name,
+		genres: body.genres,
+		scheduleDays: body.schedule?.days,
+		scheduleTime: body.schedule?.time
 	};
 }
 

@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { Plus, TelevisionSimple, Trash } from 'phosphor-svelte';
+	import { CaretDown, CaretUp, Plus, TelevisionSimple, Trash } from 'phosphor-svelte';
 	import type { PageData } from './$types';
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import type { APIShow } from '$lib/types';
 
 	export let data: PageData;
 
@@ -15,12 +16,22 @@
 	let searchTerm = '';
 	$: searchTerm = $page.url.searchParams.get('query') ?? '';
 	let pendingDelete: { id: number; name: string } | null = null;
+	let expandedShowId: number | null = null;
 
 	function relativeDate(date?: string) {
 		if (!date) {
 			return '';
 		}
 		return `next episode ${dayjs(date).fromNow()}`;
+	}
+
+	function scheduleText(show: APIShow) {
+		const days = show.scheduleDays?.length ? show.scheduleDays.join(', ') : null;
+		const time = show.scheduleTime;
+		if (!days && !time) {
+			return 'Schedule not available';
+		}
+		return `${days ?? 'Any day'}${time ? ` at ${time}` : ''}`;
 	}
 
 	const handleAddShow = ({ update }: { update: () => Promise<void> }) =>
@@ -113,9 +124,24 @@
 							<a class="font-semibold text-sky-300" href="https://www.tvmaze.com/shows/{show.id}">
 								{show.name}
 							</a>
-							<span class="block text-sm text-slate-300 whitespace-nowrap">
-								{relativeDate(show.nextEpisodeTime)}
-							</span>
+							<div class="flex flex-col gap-1 text-sm text-slate-300">
+								<span class="whitespace-nowrap">{relativeDate(show.nextEpisodeTime)}</span>
+								<button
+									class="inline-flex w-max items-center gap-1 rounded-md border border-slate-700 px-2 py-1 text-xs text-slate-200 hover:border-slate-500"
+									type="button"
+									on:click={() => {
+										expandedShowId = expandedShowId === show.id ? null : show.id;
+									}}
+								>
+									{#if expandedShowId === show.id}
+										<CaretUp size="16" />
+										Hide details
+									{:else}
+										<CaretDown size="16" />
+										Show details
+									{/if}
+								</button>
+							</div>
 						</div>
 					</td>
 					<td>
@@ -133,6 +159,52 @@
 						</form>
 					</td>
 				</tr>
+				{#if expandedShowId === show.id}
+					<tr class="bg-slate-900/50">
+						<td colspan="4" class="p-4">
+							<div class="flex flex-col gap-2">
+								<div class="flex flex-wrap gap-4 text-sm text-slate-300">
+									<span class="rounded-full border border-slate-700 px-3 py-1">
+										{show.status ?? 'Status unknown'}
+									</span>
+									{#if show.network}
+										<span class="rounded-full border border-slate-700 px-3 py-1">
+											{show.network}
+										</span>
+									{/if}
+									<span class="rounded-full border border-slate-700 px-3 py-1">
+										{scheduleText(show)}
+									</span>
+									{#if show.genres?.length}
+										<span class="rounded-full border border-slate-700 px-3 py-1">
+											{show.genres.join(', ')}
+										</span>
+									{/if}
+								</div>
+								{#if show.summary}
+									<div class="prose prose-invert max-w-none text-sm leading-relaxed">
+										{@html show.summary}
+									</div>
+								{:else}
+									<p class="text-sm text-slate-400">No summary available.</p>
+								{/if}
+								{#if show.nextEpisodeName || show.nextEpisodeSummary}
+									<div class="rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-sm text-slate-200">
+										<p class="font-semibold text-slate-100">Next episode</p>
+										{#if show.nextEpisodeName}
+											<p class="mt-1">{show.nextEpisodeName}</p>
+										{/if}
+										{#if show.nextEpisodeSummary}
+											<div class="prose prose-invert mt-2 max-w-none text-xs leading-relaxed">
+												{@html show.nextEpisodeSummary}
+											</div>
+										{/if}
+									</div>
+								{/if}
+							</div>
+						</td>
+					</tr>
+				{/if}
 			{/each}
 		</tbody>
 	</table>

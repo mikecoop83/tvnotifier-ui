@@ -3,6 +3,14 @@ export interface APIShow {
 	name: string;
 	image?: string;
 	nextEpisodeTime?: string;
+	nextEpisodeName?: string;
+	nextEpisodeSummary?: string;
+	summary?: string;
+	status?: string;
+	network?: string;
+	genres?: string[];
+	scheduleDays?: string[];
+	scheduleTime?: string;
 }
 
 export interface User {
