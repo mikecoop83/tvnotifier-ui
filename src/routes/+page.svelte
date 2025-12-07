@@ -16,7 +16,7 @@
 	let searchTerm = '';
 	$: searchTerm = $page.url.searchParams.get('query') ?? '';
 	let pendingDelete: { id: number; name: string } | null = null;
-	let expandedShowId: number | null = null;
+	let expandedShowIds: Set<number> = new Set();
 
 	function relativeDate(date?: string) {
 		if (!date) {
@@ -101,19 +101,23 @@
 			</tbody>
 		</table>
 	{/if}
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<!-- <th>ID</th> -->
-				<th></th>
-				<th>Name</th>
-				<th>Delete</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each shows as show}
+	<table class="table table-hover table-fixed">
+			<colgroup>
+				<col class="w-16" />
+				<col />
+				<col class="w-[4rem]" />
+			</colgroup>
+			<thead>
 				<tr>
+					<!-- <th>ID</th> -->
+					<th></th>
+					<th>Name</th>
+					<th>Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each shows as show}
+					<tr>
 					<td>
 						<a href="https://www.tvmaze.com/shows/{show.id}" aria-label={show.name}>
 							<img class="w-12" src={show.image} alt={show.name} />
@@ -135,10 +139,18 @@
 									class="inline-flex w-max items-center gap-1 rounded-md border border-slate-700 px-2 py-0.5 text-[11px] text-slate-200 hover:border-slate-500"
 									type="button"
 									on:click={() => {
-										expandedShowId = expandedShowId === show.id ? null : show.id;
+										expandedShowIds = (() => {
+											const next = new Set(expandedShowIds);
+											if (next.has(show.id)) {
+												next.delete(show.id);
+											} else {
+												next.add(show.id);
+											}
+											return next;
+										})();
 									}}
 								>
-									{#if expandedShowId === show.id}
+									{#if expandedShowIds.has(show.id)}
 										<CaretUp size="16" />
 										Hide details
 									{:else}
@@ -163,15 +175,15 @@
 							</button>
 						</form>
 					</td>
-				</tr>
-				{#if expandedShowId === show.id}
-					<tr class="bg-slate-900/50">
-						<td colspan="4" class="p-4">
-							<div class="flex flex-col gap-2">
-								<div class="flex flex-wrap gap-4 text-sm text-slate-300">
-									<span class="rounded-full border border-slate-700 px-3 py-1">
-										{show.status ?? 'Status unknown'}
-									</span>
+					</tr>
+					{#if expandedShowIds.has(show.id)}
+						<tr class="bg-slate-900/50">
+							<td colspan="3" class="p-4">
+								<div class="flex flex-col gap-2">
+									<div class="flex flex-wrap gap-4 text-sm text-slate-300">
+										<span class="rounded-full border border-slate-700 px-3 py-1">
+											{show.status ?? 'Status unknown'}
+										</span>
 									{#if show.network}
 										<span class="rounded-full border border-slate-700 px-3 py-1">
 											{show.network}
