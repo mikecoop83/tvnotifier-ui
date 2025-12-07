@@ -132,7 +132,7 @@
 							<div class="flex flex-col gap-1 text-sm text-slate-300">
 								<span class="whitespace-nowrap">{relativeDate(show.nextEpisodeTime)}</span>
 								<button
-									class="inline-flex w-max items-center gap-1 rounded-md border border-slate-700 px-2 py-1 text-xs text-slate-200 hover:border-slate-500"
+									class="inline-flex w-max items-center gap-1 rounded-md border border-slate-700 px-2 py-0.5 text-[11px] text-slate-200 hover:border-slate-500"
 									type="button"
 									on:click={() => {
 										expandedShowId = expandedShowId === show.id ? null : show.id;
