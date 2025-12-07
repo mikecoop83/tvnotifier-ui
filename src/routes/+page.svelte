@@ -124,6 +124,11 @@
 							<a class="font-semibold text-sky-300" href="https://www.tvmaze.com/shows/{show.id}">
 								{show.name}
 							</a>
+							{#if show.status?.toLowerCase() === 'ended'}
+								<span class="inline-flex items-center gap-1 rounded-full border border-rose-500/60 bg-rose-500/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-rose-200 ml-2">
+									Ended
+								</span>
+							{/if}
 							<div class="flex flex-col gap-1 text-sm text-slate-300">
 								<span class="whitespace-nowrap">{relativeDate(show.nextEpisodeTime)}</span>
 								<button
