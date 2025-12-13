@@ -72,18 +72,18 @@
 						<td>
 							<a href="https://www.tvmaze.com/shows/{show.id}" aria-label={show.name}>
 								{#if show.image}
-									<img class="w-12" src={show.image} alt={show.name} />
+									<img class="w-20 md:w-14" src={show.image} alt={show.name} />
 								{:else}
-									<TelevisionSimple size="48" />
+									<TelevisionSimple size="64" />
 								{/if}
 							</a>
 						</td>
 						<td>
 							<div class="min-w-[12rem] space-y-1">
-								<a class="font-semibold text-sky-300" href="https://www.tvmaze.com/shows/{show.id}">
+								<a class="font-semibold text-lg md:text-base text-sky-300" href="https://www.tvmaze.com/shows/{show.id}">
 									{show.name}
 								</a>
-								<span class="block text-sm text-slate-300 whitespace-nowrap">
+								<span class="block text-base md:text-sm text-slate-300 whitespace-nowrap">
 									{relativeDate(show.nextEpisodeTime)}
 								</span>
 							</div>
@@ -103,7 +103,7 @@
 	{/if}
 	<table class="table table-hover table-fixed">
 			<colgroup>
-				<col class="w-16" />
+				<col class="w-20" />
 				<col />
 				<col class="w-[4rem]" />
 			</colgroup>
@@ -120,23 +120,23 @@
 					<tr>
 					<td>
 						<a href="https://www.tvmaze.com/shows/{show.id}" aria-label={show.name}>
-							<img class="w-12" src={show.image} alt={show.name} />
+							<img class="w-20 md:w-14" src={show.image} alt={show.name} />
 						</a>
 					</td>
 					<td>
 						<div class="min-w-[12rem] space-y-1">
-							<a class="font-semibold text-sky-300" href="https://www.tvmaze.com/shows/{show.id}">
+							<a class="font-semibold text-lg md:text-base text-sky-300" href="https://www.tvmaze.com/shows/{show.id}">
 								{show.name}
 							</a>
 							{#if show.status?.toLowerCase() === 'ended'}
-								<span class="inline-flex items-center gap-1 rounded-full border border-rose-500/60 bg-rose-500/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-rose-200 ml-2">
+								<span class="inline-flex items-center gap-1 rounded-full border border-rose-500/60 bg-rose-500/10 px-2 py-0.5 text-xs md:text-[11px] font-semibold uppercase tracking-wide text-rose-200 ml-2">
 									Ended
 								</span>
 							{/if}
-							<div class="flex flex-col gap-1 text-sm text-slate-300">
+							<div class="flex flex-col gap-1 text-base md:text-sm text-slate-300">
 								<span class="whitespace-nowrap">{relativeDate(show.nextEpisodeTime)}</span>
 								<button
-									class="inline-flex w-max items-center gap-1 rounded-md border border-slate-700 px-2 py-0.5 text-[11px] text-slate-200 hover:border-slate-500"
+									class="inline-flex w-max items-center gap-1 rounded-md border border-slate-700 px-2 py-0.5 text-xs md:text-[11px] text-slate-200 hover:border-slate-500"
 									type="button"
 									on:click={() => {
 										expandedShowIds = (() => {
@@ -180,7 +180,7 @@
 						<tr class="bg-slate-900/50">
 							<td colspan="3" class="p-4">
 								<div class="flex flex-col gap-2">
-									<div class="flex flex-wrap gap-4 text-sm text-slate-300">
+									<div class="flex flex-wrap gap-4 text-base md:text-sm text-slate-300">
 										<span class="rounded-full border border-slate-700 px-3 py-1">
 											{show.status ?? 'Status unknown'}
 										</span>
@@ -199,20 +199,20 @@
 									{/if}
 								</div>
 								{#if show.summary}
-									<div class="prose prose-invert max-w-none text-sm leading-relaxed">
+									<div class="prose prose-invert max-w-none text-base md:text-sm leading-relaxed">
 										{@html show.summary}
 									</div>
 								{:else}
-									<p class="text-sm text-slate-400">No summary available.</p>
+									<p class="text-base md:text-sm text-slate-400">No summary available.</p>
 								{/if}
 								{#if show.nextEpisodeName || show.nextEpisodeSummary}
-									<div class="rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-sm text-slate-200">
+									<div class="rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-base md:text-sm text-slate-200">
 										<p class="font-semibold text-slate-100">Next episode</p>
 										{#if show.nextEpisodeName}
 											<p class="mt-1">{show.nextEpisodeName}</p>
 										{/if}
 										{#if show.nextEpisodeSummary}
-											<div class="prose prose-invert mt-2 max-w-none text-xs leading-relaxed">
+											<div class="prose prose-invert mt-2 max-w-none text-base md:text-sm leading-relaxed">
 												{@html show.nextEpisodeSummary}
 											</div>
 										{/if}
@@ -231,7 +231,7 @@
 			<div class="w-[26rem] rounded-xl border border-slate-800 bg-slate-900 shadow-2xl shadow-slate-950/50 p-6 space-y-4">
 				<header class="space-y-1">
 					<h2 class="text-lg font-semibold text-slate-50">Remove show</h2>
-					<p class="text-sm text-slate-300">Are you sure you want to remove “{pendingDelete.name}” from your list?</p>
+					<p class="text-base md:text-sm text-slate-300">Are you sure you want to remove “{pendingDelete.name}” from your list?</p>
 				</header>
 				<div class="flex justify-end gap-3">
 					<button

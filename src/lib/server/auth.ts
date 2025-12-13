@@ -30,8 +30,8 @@ export async function createOAuthClient(origin: string) {
 export async function buildAuthUrl(origin: string) {
 	const client = await createOAuthClient(origin);
 	return client.generateAuthUrl({
-		scope: ['openid', 'https://www.googleapis.com/auth/userinfo.profile'],
-		prompt: 'select_account'
+		prompt: 'select_account',
+		scope: ['openid', 'https://www.googleapis.com/auth/userinfo.profile']
 	});
 }
 

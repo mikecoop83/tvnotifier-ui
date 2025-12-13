@@ -49,7 +49,7 @@
 			</AppBar.Trail>
 		</AppBar.Toolbar>
 	</AppBar>
-	<main class="container mx-auto p-4">
+	<main class="container mx-auto p-4 text-lg md:text-base">
 		<slot />
 	</main>
 </div>
