@@ -11,6 +11,7 @@ export interface APIShow {
 	genres?: string[];
 	scheduleDays?: string[];
 	scheduleTime?: string;
+	seasonsCount?: number;
 }
 
 export interface User {

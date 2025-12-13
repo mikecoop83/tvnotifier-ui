@@ -189,6 +189,11 @@
 											{show.network}
 										</span>
 									{/if}
+									{#if show.seasonsCount != null}
+										<span class="rounded-full border border-slate-700 px-3 py-1">
+											{show.seasonsCount} season{show.seasonsCount === 1 ? '' : 's'}
+										</span>
+									{/if}
 									<span class="rounded-full border border-slate-700 px-3 py-1">
 										{scheduleText(show)}
 									</span>

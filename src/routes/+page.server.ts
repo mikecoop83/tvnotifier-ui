@@ -92,7 +92,7 @@ export const load = (async ({ url }) => {
 
 async function getShow(show: Shows): Promise<APIShow> {
 	const data = await fetchWithBackoff(
-		`https://api.tvmaze.com/shows/${show.id}?embed=nextepisode`,
+		`https://api.tvmaze.com/shows/${show.id}?embed[]=nextepisode&embed[]=seasons`,
 		{
 			method: 'GET',
 			headers: {
@@ -105,15 +105,16 @@ async function getShow(show: Shows): Promise<APIShow> {
 		id: show.id,
 		name: body.name,
 		image: body.image.medium,
-	nextEpisodeTime: body._embedded?.nextepisode?.airstamp,
-	nextEpisodeName: (body._embedded?.nextepisode as NextEpisode | undefined)?.name,
-	nextEpisodeSummary: (body._embedded?.nextepisode as NextEpisode | undefined)?.summary,
-	summary: body.summary,
+		nextEpisodeTime: body._embedded?.nextepisode?.airstamp,
+		nextEpisodeName: (body._embedded?.nextepisode as NextEpisode | undefined)?.name,
+		nextEpisodeSummary: (body._embedded?.nextepisode as NextEpisode | undefined)?.summary,
+		summary: body.summary,
 		status: body.status,
 		network: body.network?.name ?? body.webChannel?.name,
 		genres: body.genres,
 		scheduleDays: body.schedule?.days,
-		scheduleTime: body.schedule?.time
+		scheduleTime: body.schedule?.time,
+		seasonsCount: body._embedded?.seasons?.length
 	};
 }
 
