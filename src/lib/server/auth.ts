@@ -9,6 +9,8 @@ if (!privateKey) {
 }
 const signingKey: jwt.Secret = privateKey;
 
+export const AUTH_SESSION_MAX_AGE = 60 * 60 * 24 * 365;
+
 let googleModulePromise: Promise<typeof import('googleapis')> | null = null;
 
 async function loadGoogle() {
@@ -30,7 +32,6 @@ export async function createOAuthClient(origin: string) {
 export async function buildAuthUrl(origin: string) {
 	const client = await createOAuthClient(origin);
 	return client.generateAuthUrl({
-		prompt: 'select_account',
 		scope: ['openid', 'https://www.googleapis.com/auth/userinfo.profile']
 	});
 }
@@ -42,7 +43,7 @@ export async function buildAuthUrl(origin: string) {
 export function generateToken(
 	userId: string,
 	pictureURL?: string | null,
-	time: jwt.SignOptions['expiresIn'] = '6h'
+	time: jwt.SignOptions['expiresIn'] = AUTH_SESSION_MAX_AGE
 ) {
 	return jwt.sign({ userId, pictureURL }, signingKey, { algorithm: 'RS256', expiresIn: time });
 }

@@ -1,4 +1,4 @@
-import { createOAuthClient, generateToken } from '$lib/server/auth';
+import { AUTH_SESSION_MAX_AGE, createOAuthClient, generateToken } from '$lib/server/auth';
 import { prisma } from '$lib/server/prisma';
 import { error, redirect } from '@sveltejs/kit';
 import type { oauth2_v2 } from 'googleapis';
@@ -44,7 +44,13 @@ export const GET = (async ({ url, cookies }) => {
 		}
 
 		const token = generateToken(profileData.id, profileData.picture);
-		cookies.set('auth', token, { path: '/' });
+		cookies.set('auth', token, {
+			path: '/',
+			httpOnly: true,
+			maxAge: AUTH_SESSION_MAX_AGE,
+			sameSite: 'lax',
+			secure: url.protocol === 'https:'
+		});
 		throw redirect(302, '/');
 	}
 	throw error(400, 'how did you even get her bro');
