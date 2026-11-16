@@ -1,6 +1,6 @@
-import { logFetch } from '$lib/server/http';
-import { prisma } from '$lib/server/prisma';
-import type { APIShow } from '$lib/types';
+import { logFetch } from '#lib/server/http.js';
+import { prisma } from '#lib/server/prisma.js';
+import type { APIShow } from '#lib/types.js';
 import type { Shows } from '@prisma/client';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';

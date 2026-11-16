@@ -1,4 +1,4 @@
-import { buildAuthUrl } from '$lib/server/auth';
+import { buildAuthUrl } from '#lib/server/auth.js';
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 

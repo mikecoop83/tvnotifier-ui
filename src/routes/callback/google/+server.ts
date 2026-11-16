@@ -1,5 +1,5 @@
-import { AUTH_SESSION_MAX_AGE, createOAuthClient, generateToken } from '$lib/server/auth';
-import { prisma } from '$lib/server/prisma';
+import { AUTH_SESSION_MAX_AGE, createOAuthClient, generateToken } from '#lib/server/auth.js';
+import { prisma } from '#lib/server/prisma.js';
 import { error, redirect } from '@sveltejs/kit';
 import type { oauth2_v2 } from 'googleapis';
 import type { RequestHandler } from './$types';

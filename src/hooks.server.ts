@@ -1,5 +1,5 @@
-import { getUserFromToken } from '$lib/server/auth';
-import { prisma } from '$lib/server/prisma';
+import { getUserFromToken } from '#lib/server/auth.js';
+import { prisma } from '#lib/server/prisma.js';
 import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle = (async ({ event, resolve }) => {
