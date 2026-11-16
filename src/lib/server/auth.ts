@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import base64url from 'base64url';
-import { env } from '$env/dynamic/private';
-import type { User } from '$lib/types';
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, JWT_KEY } from '$app/env/private';
+import type { User } from '#lib/types.js';
 
-const privateKey = env.JWT_KEY;
+const privateKey = JWT_KEY;
 if (!privateKey) {
 	throw new Error('JWT_KEY is not configured');
 }
@@ -23,8 +23,8 @@ async function loadGoogle() {
 export async function createOAuthClient(origin: string) {
 	const { google } = await loadGoogle();
 	return new google.auth.OAuth2(
-		env.GOOGLE_CLIENT_ID,
-		env.GOOGLE_CLIENT_SECRET,
+		GOOGLE_CLIENT_ID,
+		GOOGLE_CLIENT_SECRET,
 		new URL('/callback/google', origin).toString()
 	);
 }

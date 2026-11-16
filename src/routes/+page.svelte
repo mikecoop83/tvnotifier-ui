@@ -4,17 +4,19 @@
 	import dayjs from 'dayjs';
 	import relativeTime from 'dayjs/plugin/relativeTime';
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
-	import type { APIShow } from '$lib/types';
+	import { afterNavigate, goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import type { APIShow } from '#lib/types.js';
 
 	export let data: PageData;
 
 	dayjs.extend(relativeTime);
 
 	$: ({ shows, searchResults } = data);
-	let searchTerm = '';
-	$: searchTerm = $page.url.searchParams.get('query') ?? '';
+	let searchTerm = page.url.searchParams.get('query') ?? '';
+	afterNavigate(() => {
+		searchTerm = page.url.searchParams.get('query') ?? '';
+	});
 	let pendingDelete: { id: number; name: string } | null = null;
 	let expandedShowIds: Set<number> = new Set();
 
