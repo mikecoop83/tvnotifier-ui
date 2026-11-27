@@ -2,11 +2,13 @@
 @import '../node_modules/@skeletonlabs/skeleton/src/themes/crimson.css';
 @import '../node_modules/@skeletonlabs/skeleton/src/index.css';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 html,
 body {
-	@apply min-h-screen overflow-x-hidden bg-slate-950 text-slate-50;
+	@apply min-h-screen overflow-x-hidden bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-50;
 }
 
 a {
-	@apply text-sky-300 hover:text-sky-200 underline-offset-2 hover:underline;
+	@apply text-sky-700 hover:text-sky-800 dark:text-sky-300 dark:hover:text-sky-200 underline-offset-2 hover:underline;
 }

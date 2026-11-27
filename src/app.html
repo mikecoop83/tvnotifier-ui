@@ -4,6 +4,20 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
+		<script>
+			// Apply the saved preference before styles load to avoid flashing the wrong theme.
+			let theme;
+			try {
+				theme = localStorage.getItem('tvnotifier-theme');
+			} catch {
+				// System preference still works when browser storage is unavailable.
+			}
+			document.documentElement.classList.toggle(
+				'dark',
+				theme === 'dark' ||
+					(theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+			);
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-theme="crimson">
